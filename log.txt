@@ -1,0 +1,12 @@
+
+1703714844098.::1 GET : /api/users
+
+1703714998844.::1 POST : /api/users
+
+1703715112951.::1 GET : /api/users/658ca0b6b1cf9e3d6bf68133
+
+1703832012510.::1 GET : /customers
+
+1703832033962.::1 GET : /customer
+
+1703832051065.::1 GET : /api/customers
