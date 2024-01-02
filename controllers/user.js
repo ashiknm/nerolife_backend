@@ -68,17 +68,17 @@ async function handleDeleteUserById(req, res) {
 async function handleCreateNewUser(req, res) {
   try {
     const body = req.body;
-    if (
-      !body ||
-      !body.first_name ||
-      !body.last_name ||
-      !body.email ||
-      !body.gender ||
-      !body.job_title
-    ) {
-      // we will set the reponse code to 400
-      return res.status(400).json({ Warning: "All fields are required. " });
-    }
+    console.log("body : ", body);
+    // if (
+    //   !body.first_name ||
+    //   !body.last_name ||
+    //   !body.email ||
+    //   !body.gender ||
+    //   !body.job_title
+    // ) {
+    //   // we will set the reponse code to 400
+    //   return res.status(400).json({ Warning: "All fields are required. " });
+    // }
     // now we will push the code into the mongodb database into the users collection.
     const result = await User.create({
       first_name: body.first_name,

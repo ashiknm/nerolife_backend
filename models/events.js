@@ -29,7 +29,9 @@ const eventSchema = new mongoose.Schema(
     event_disclaimer : {type : String},
     attended_customers: [{type:String}],
     reserved_customers :  [{type:String}],
-    ticket_link: {type:String}
+    ticket_link: {type:String},
+    poster_url: { type: String }, // Add poster_url field
+    intro_video: { type: String }, // Add intro_video field
   },
   {
     timestamps: true,
