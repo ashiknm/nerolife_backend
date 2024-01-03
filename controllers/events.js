@@ -102,6 +102,8 @@ async function handleCreateNewEvent(req, res) {
         booking_guestlist : body.booking_guestlist ,  // dropdown  1 to 10
         event_price : body.event_price , // price option
         event_disclaimer : body.event_disclaimer,
+        poster_url: body.poster_url, // Add poster_url field
+        intro_video: body.intro_video, // Add intro_video field
     });
     //  we will consolel the result as well .
     console.log("Result is ", result);

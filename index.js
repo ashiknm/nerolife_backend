@@ -21,9 +21,7 @@ const videoRouter = require("./controllers/videos");
 const app = express();
 // create a port for our application.
 
-
-
-
+app.use(express.json());
 const PORT = 8000;
 // connect to our mongo db database.
 connectMongoDb("mongodb://127.0.0.1:27017/nerolifedb");
@@ -42,6 +40,8 @@ app.use("/api/outlets", outletRouter);
 app.use("/api/calendars", calendarRouter);
 app.use("/api/images", imageRouter);
 app.use("/api/videos", videoRouter);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // tell the server to listten to the given port number to start the server. and console the log for successful connection.
 app.listen(PORT, () =>

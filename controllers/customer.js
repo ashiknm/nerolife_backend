@@ -85,7 +85,7 @@ async function handleCreateNewCustomer(req, res) {
 
         customer_first_name: body.customer_first_name,
         customer_last_name: body.customer_last_name,
-        customer_id : body.Customer_id,
+        customer_id : body.customer_id,
         gender: body.gender, // dropdown
         dob: body.dob,
         phone: body.phone,
