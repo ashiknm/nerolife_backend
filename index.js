@@ -7,6 +7,8 @@ const { logReqRes } = require("./middlewares"); // here no need to write index.j
 // import the userRouter from the userRouter.js file.
 const userRouter = require("./routes/user");
 
+const cors = require("cors");
+
 const customerRouter = require("./routes/customer");
 const artistRouter = require("./routes/artist");
 const eventRouter = require("./routes/events");
@@ -22,6 +24,7 @@ const app = express();
 // create a port for our application.
 
 app.use(express.json());
+app.use(cors());
 const PORT = 8000;
 // connect to our mongo db database.
 connectMongoDb("mongodb://127.0.0.1:27017/nerolifedb");

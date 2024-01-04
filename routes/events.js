@@ -12,7 +12,7 @@ const router = express.Router();
 router.route("/").get(handleGetAllEvents).post(handleCreateNewEvent);
 
 router
-  .route("/:id")
+  .route("/:event_id")
   .get(handleGetEventById)
   .patch(handleUpdateEventById)
   .delete(handleDeleteEventById);

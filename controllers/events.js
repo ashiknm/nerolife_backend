@@ -10,16 +10,36 @@ async function handleGetAllEvents(req, res) {
 }
 
 // function to get the Event by id.
+// async function handleGetEventById(req, res) {
+//   // first get the id enterd by the Event.
+//   const fetched_Event = await Event.findById(req.params.id);
+//   // if the Event if not found by the id.
+//   if (!fetched_Event) {
+//     return res.status(400).json({ error: "Event not found." });
+//   }
+//   // return the fetch Event from the database.
+//   return res.json(fetched_Event);
+// }
+
 async function handleGetEventById(req, res) {
-  // first get the id enterd by the Event.
-  const fetched_Event = await Event.findById(req.params.id);
-  // if the Event if not found by the id.
-  if (!fetched_Event) {
-    return res.status(400).json({ error: "Event not found." });
+  try {
+    // First get the event by the event_id entered by the user.
+    const fetchedEvent = await Event.findOne({ event_id: req.params.event_id });
+
+    // If the event is not found by the event_id.
+    if (!fetchedEvent) {
+      return res.status(404).json({ error: "Event not found." });
+    }
+
+    // Return the fetched event from the database.
+    return res.json(fetchedEvent);
+  } catch (error) {
+    // Handle any unexpected errors.
+    console.error("Error fetching event:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-  // return the fetch Event from the database.
-  return res.json(fetched_Event);
 }
+
 
 async function handleUpdateEventById(req, res) {
   try {
