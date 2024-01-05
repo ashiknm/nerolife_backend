@@ -106,6 +106,7 @@ async function handleCreateNewOutlet(req, res) {
         invitelink: body.invitelink,
         outlet_profile_rules_and_regulation: body.outlet_profile_rules_and_regulation,
         outlet_license_acceptance: body.outlet_license_acceptance,
+        intro_video: body.intro_video
      
     });
     //  we will consolel the result as well .

@@ -26,7 +26,8 @@ const outletSchema = new mongoose.Schema(
     invitelink : {type : String},
     outlet_profile_rules_and_regulation : {type : String},
     outlet_license_acceptance : {type :Boolean},
-    rating : {type: Number}
+    rating : {type: Number},
+    intro_video: { type: String }
   },
   {
     timestamps: true,
