@@ -88,7 +88,7 @@ async function handleCreateNewArtist(req, res) {
         first_name: body.first_name,
         last_name: body.last_name,
         artist_name: body.artist_name,
-        artist_id : body.artist_name,
+        artist_id : body.artist_id,
         dob :body.dob,
         phone: body.phone,
         email: body.email,
@@ -107,6 +107,7 @@ async function handleCreateNewArtist(req, res) {
         invitelink : body.invitelink,
         artist_profile_disclaimer : body.artist_profile_disclaimer,
         artist_license_acceptance : body.artist_license_acceptance,
+        artist_intro_video : body.artist_intro_video
     });
     //  we will consolel the result as well .
     console.log("Result is ", result);

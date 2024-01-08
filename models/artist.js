@@ -26,6 +26,7 @@ const artistSchema = new mongoose.Schema(
     invitelink : {type : String},
     artist_profile_disclaimer : {type : String},
     artist_license_acceptance : {type :Boolean},
+    artist_intro_video : { type: String  }
   },
   {
     timestamps: true,

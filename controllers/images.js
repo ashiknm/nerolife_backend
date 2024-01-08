@@ -59,6 +59,7 @@ router.get('/:id',async (req,res)=>{
   }
 });
 
+// outlet ambience
 router.get('/ambience/:id', async (req, res) => {
   try {
     // First get the event by the event_id entered by the user and image_type.
@@ -78,6 +79,7 @@ router.get('/ambience/:id', async (req, res) => {
   }
 });
 
+// outlet experience
 router.get('/experience/:id', async (req, res) => {
   try {
     // First get the event by the event_id entered by the user and image_type.
@@ -97,9 +99,78 @@ router.get('/experience/:id', async (req, res) => {
   }
 });
 
-async function handleGetEventById(req, res) {
 
-}
+
+// artist potraits
+router.get('/potrait/:id', async (req, res) => {
+  try {
+    // First get the event by the event_id entered by the user and image_type.
+    const fetchedEvent = await Images.find({ id: req.params.id, image_type: 'artist_potrait_image' });
+
+    // If the event is not found by the event_id.
+    if (!fetchedEvent) {
+      return res.status(404).json({ error: "potrait not found." });
+    }
+
+    // Return the fetched event from the database.
+    return res.json(fetchedEvent);
+  } catch (error) {
+    // Handle any unexpected errors.
+    console.error("Error fetching event:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// artist potraits
+router.get('/potrait/:id', async (req, res) => {
+  try {
+    // First get the event by the event_id entered by the user and image_type.
+    const fetchedEvent = await Images.find({ id: req.params.id, image_type: 'artist_potrait_image' });
+
+    // If the event is not found by the event_id.
+    if (!fetchedEvent) {
+      return res.status(404).json({ error: "potrait not found." });
+    }
+
+    // Return the fetched event from the database.
+    return res.json(fetchedEvent);
+  } catch (error) {
+    // Handle any unexpected errors.
+    console.error("Error fetching event:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get('/:type/:id', async (req, res) => {
+  try {
+    const { type, id } = req.params;
+
+    // Validate image type
+    const validImageTypes = ['outlet_ambience_image', 'outlet_experience_image', 'event_image', 'artist_potrait_image', 'artist_experience_image'];
+    if (!validImageTypes.includes(type)) {
+      return res.status(400).json({ error: "Invalid image type." });
+    }
+
+    // Get the event by the event_id entered by the user and image_type.
+    const fetchedImages = await Images.find({ id, image_type: type });
+
+    // If the event is not found by the event_id.
+    if (!fetchedImages) {
+      return res.status(404).json({ error: "Images not found." });
+    }
+
+    // Return the fetched event from the database.
+    return res.json(fetchedImages);
+  } catch (error) {
+    // Handle any unexpected errors.
+    console.error("Error fetching images:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+
+
 
 
 
