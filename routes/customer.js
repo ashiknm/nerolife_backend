@@ -5,11 +5,20 @@ const {
   handleUpdateCustomerById,
   handleDeleteCustomerById,
   handleCreateNewCustomer,
+  register,
+  login,
+  refresh
 } = require("../controllers/customer");
 
 const router = express.Router();
 
 router.route("/").get(handleGetAllCustomers).post(handleCreateNewCustomer);
+
+router.route("/register").post(register);
+
+router.route("/login").post(login);
+
+router.route("/refresh").post(refresh);
 
 router
   .route("/:id")

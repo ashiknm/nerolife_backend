@@ -2,6 +2,8 @@
 const express = require("express");
 // connect to mongo db using the function connectMongoDb
 const { connectMongoDb } = require("./connection");
+
+const cookieParser = require('cookie-parser');
 // import the fs function to log the data.
 const { logReqRes } = require("./middlewares"); // here no need to write index.js , it automatically means pick from index .js file
 // import the userRouter from the userRouter.js file.
@@ -25,6 +27,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+// Middleware to parse cookies
+app.use(cookieParser());
 const PORT = 8000;
 // connect to our mongo db database.
 connectMongoDb("mongodb://127.0.0.1:27017/nerolifedb");

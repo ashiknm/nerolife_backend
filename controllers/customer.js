@@ -1,7 +1,18 @@
 // write a controller function to get all the Customers from the database.
 // for this first import the Customer class from the models file Customer.js
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const Customer = require("../models/customer");
+
+const secretKey = '6gh8fhs8ij1d'; // Replace with a secure secret key in a production environment
+
+
+// Function to generate access token
+const generateAccessToken = (userId) => {
+  return jwt.sign({ userId }, secretKey, { expiresIn: '15m' });
+};
+
 
 // function to get all the Customers.
 async function handleGetAllCustomers(req, res) {
@@ -68,6 +79,7 @@ async function handleDeleteCustomerById(req, res) {
 async function handleCreateNewCustomer(req, res) {
   try {
     const body = req.body;
+    console.log("body", body)
     if (
       !body.customer_first_name ||
       !body.customer_last_name ||
@@ -80,9 +92,18 @@ async function handleCreateNewCustomer(req, res) {
       // we will set the reponse code to 400
       return res.status(400).json({ Warning: "All fields are required. " });
     }
+
+    const existingUser = await Customer.findOne({ email: body.email  });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(body.password, 10);
+
+
+
     // now we will push the code into the mongodb database into the Customers collection.
     const result = await Customer.create({
-
         customer_first_name: body.customer_first_name,
         customer_last_name: body.customer_last_name,
         customer_id : body.customer_id,
@@ -90,7 +111,7 @@ async function handleCreateNewCustomer(req, res) {
         dob: body.dob,
         phone: body.phone,
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         age_group : body.age_group,  // drop down auto generation
         music_preference : body.music_preference,  // dropdown
         event_preference : body.event_preference,  // dropdown
@@ -112,7 +133,119 @@ async function handleCreateNewCustomer(req, res) {
     // so return the status code as 201 , so as to indicate Customer has been created.
     return res
       .status(201)
-      .json({ Message: "Customer successfully created.", id: result._id });
+      .json({ Message: "Registration Successfull.", id: result._id });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+}
+
+async function register(req, res) {
+  try {
+    const body = req.body;
+    console.log("body", body)
+    if (
+      !body.customer_first_name ||
+      !body.customer_last_name ||
+      !body.password ||
+      !body.email ||
+      !body.phone ||
+      !body.dob ||
+      !body.gender 
+      
+    ) {
+      // we will set the reponse code to 400
+      return res.status(400).json({ Warning: "All fields are required. " });
+    }
+
+    const existingUser = await Customer.findOne({ email: body.email  });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(body.password, 10);
+
+
+
+    // now we will push the code into the mongodb database into the Customers collection.
+    const result = await Customer.create({
+        customer_first_name: body.customer_first_name,
+        customer_last_name: body.customer_last_name,
+        customer_id : body.customer_id,
+        phone: body.phone,
+        email: body.email,
+        password: hashedPassword,
+        dob:body.dob,
+        gender:body.gender
+       
+    });
+    //  we will consolel the result as well .
+    console.log("Result is ", result);
+    // so return the status code as 201 , so as to indicate Customer has been created.
+    return res
+      .status(201)
+      .json({ Message: "Registration Successfull.", id: result._id });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+}
+
+function refresh(req, res){
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: 'Refresh token not provided' });
+  }
+
+  // Verify the refresh token
+  jwt.verify(refreshToken, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+
+    // Create and send a new access token
+    const accessToken = jwt.sign({ userId: decoded.userId }, secretKey, { expiresIn: '15m' });
+    res.json({ accessToken });
+  });
+}
+
+
+
+async function login(req, res) {
+  try {
+    const body = req.body;
+    if (
+      !body.email ||
+      !body.password
+    ) {
+      // we will set the reponse code to 400
+      return res.status(400).json({ Warning: "All fields are required. " });
+    }
+
+    const user = await Customer.findOne({ email: body.email  });
+
+    if (!user || !bcrypt.compareSync(body.password, user.password)) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const accessToken = generateAccessToken(user._id);
+
+    // Generate refresh token (store this in a database for better security)
+    const refreshToken = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '7d' });
+
+     // Set refresh token in an HTTP-only cookie
+     res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+
+
+
+    // so return the status code as 201 , so as to indicate Customer has been created.
+    return res
+      .status(201)
+      .json({ Message: "Login Success.", access_token:accessToken, refreshtoken:  refreshToken, customer_id: user.customer_id });
   } catch (error) {
     return res
       .status(500)
@@ -126,4 +259,7 @@ module.exports = {
   handleUpdateCustomerById,
   handleDeleteCustomerById,
   handleCreateNewCustomer,
+  register,
+  login,
+  refresh
 };
